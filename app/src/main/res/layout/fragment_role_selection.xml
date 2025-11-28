@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E8F4FF"
+    android:padding="24dp">
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Your Role"
+        android:textSize="32sp"
+        android:textColor="#1E293B"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="60dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose how you want to use BooBook"
+        android:textSize="16sp"
+        android:textColor="#64748B"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- 3 nút chọn Role -->
+    <LinearLayout
+        android:id="@+id/roleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+
+        <!-- User -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardUser"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="3dp"
+            app:strokeColor="#3B82F6">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_person"
+                    android:tint="#3B82F6"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User"
+                    android:textSize="18sp"
+                    android:textColor="#1E293B"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="sans-serif-medium"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Author -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAuthor"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_edit"
+                    android:tint="#94A3B8"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Author"
+                    android:textSize="18sp"
+                    android:textColor="#64748B"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Admin -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAdmin"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_shield"
+                    android:tint="#94A3B8"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Admin"
+                    android:textSize="18sp"
+                    android:textColor="#64748B"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Card tính năng -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardFeatures"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="12dp"
+        app:layout_constraintTop_toBottomOf="@id/roleContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/featuresContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Available Features"
+                android:textSize="20sp"
+                android:textColor="#1E293B"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Sẽ được fill động bằng code -->
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Nút Continue -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContinue"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:text="Continue as User"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        app:cornerRadius="32dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginBottom="40dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

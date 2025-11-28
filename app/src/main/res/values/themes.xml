@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.BooBook" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/pastel_blue</item>
+        <item name="colorPrimaryVariant">@color/pastel_blue_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="android:colorBackground">@color/pastel_blue_light</item>
+        <item name="android:statusBarColor">@color/pastel_blue</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <item name="android:textColorPrimary">@color/text_dark</item>
+        <item name="android:textColorSecondary">@color/text_light</item>
+    </style>
+
+    <style name="Theme.BooBook" parent="Base.Theme.BooBook" />
+</resources>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- Ảnh bìa lớn -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:contentScrim="@android:color/white"
+            app:titleEnabled="false">
+
+            <ImageView
+                android:id="@+id/ivBlogCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_blog_placeholder"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"/>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:navigationIconTint="@android:color/white">
+
+                <!-- Chỉ còn nút Love -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLove"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="16dp"
+                    app:icon="@drawable/ic_heart"
+                    app:iconTint="@android:color/white"
+                    app:backgroundTint="#66000000"
+                    app:cornerRadius="24dp"/>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Nội dung cuộn -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="100dp">
+
+            <!-- Tiêu đề -->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The Art of Storytelling"
+                android:textSize="28sp"
+                android:textColor="#1E293B"
+                android:fontFamily="sans-serif-medium"
+                android:lineSpacingExtra="6dp"/>
+
+            <!-- Phần tác giả – chỉ còn avatar + tên + ngày -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="20dp">
+
+                <!-- Avatar tròn có chữ cái đầu -->
+                <FrameLayout
+                    android:layout_width="52dp"
+                    android:layout_height="52dp">
+
+                    <View
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/ic_person"/>
+
+                    <TextView
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:gravity="center"
+                        android:text="EW"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"
+                        android:fontFamily="sans-serif-medium"/>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
+                    <TextView
+                        android:id="@+id/tvAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Emma Wilson"
+                        android:textSize="17sp"
+                        android:textColor="#1E293B"
+                        android:fontFamily="sans-serif-medium"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nov 20, 2024 • 5 min read"
+                        android:textSize="14sp"
+                        android:textColor="#94A3B8"/>
+                </LinearLayout>
+
+                <!-- ĐÃ BỎ HOÀN TOÀN NÚT "Add to Book" -->
+            </LinearLayout>
+
+            <!-- Đường kẻ -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E2E8F0"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="28dp"/>
+
+            <!-- Nội dung bài viết -->
+            <TextView
+                android:id="@+id/tvContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Storytelling is an ancient art that has been passed down through generations. It's the way we connect with others, share experiences, and make sense of the world around us.\n\nThe Power of Narrative\n\nEvery great story has a beginning, middle, and end. But what makes a story truly compelling is the journey between these points..."
+                android:textSize="16.5sp"
+                android:textColor="#2D3748"
+                android:lineSpacingExtra="10dp"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Nền gradient xanh pastel -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#A7C7E7"
+                android:endColor="#D0E4F5"
+                android:angle="135"/>
+            <corners android:radius="28dp"/>
+        </shape>
+    </item>
+
+    <!-- Bóng mờ nhẹ -->
+    <item android:top="8dp" android:left="8dp" android:right="8dp" android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#33FFFFFF"/>
+            <corners android:radius="28dp"/>
+        </shape>
+    </item>
+
+</layer-list>

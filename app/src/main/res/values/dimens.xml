@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="corner_card">18dp</dimen>
+    <dimen name="corner_button">14dp</dimen>
+    <dimen name="padding">16dp</dimen>
+    <dimen name="margin">16dp</dimen>
+</resources>

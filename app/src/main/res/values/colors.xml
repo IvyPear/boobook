@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Màu nền chung -->
+    <color name="login_bg">#F5FBFF</color>
+
+    <!-- Màu pastel blue chính -->
+    <color name="pastel_blue">#A7C7E7</color>
+    <color name="pastel_blue_dark">#8BB7DD</color>
+
+    <!-- Text -->
+    <color name="text_title">#1E293B</color>
+    <color name="text_sub">#64748B</color>
+
+    <!-- Đường viền, stroke -->
+    <color name="field_stroke">#E2E8F0</color>
+
+    <!-- MÀU BẮT BUỘC PHẢI CÓ ĐỂ HẾT ĐỎ HOÀN TOÀN -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Màu thêm để chắc chắn không bao giờ đỏ nữa -->
+    <color name="grey">#94A3B8</color>
+    <color name="red">#EF4444</color>
+
+    <!-- 🔥 Các màu đang bị thiếu khiến app lỗi -->
+    <color name="pastel_blue_light">#D6EAFE</color>
+    <color name="text_dark">#1A1A1A</color>
+    <color name="text_light">#FFFFFF</color>
+
+</resources>
