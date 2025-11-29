@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "216402928960",
+    "firebase_url": "https://boobook-20d4d-default-rtdb.firebaseio.com",
+    "project_id": "boobook-20d4d",
+    "storage_bucket": "boobook-20d4d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216402928960:android:f5665e4db78efdb4ab86a5",
+        "android_client_info": {
+          "package_name": "com.example.boobook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlV-jmEqb1V7neMH_tqFgnkmjIHbY1u1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

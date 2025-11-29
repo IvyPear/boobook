@@ -124,7 +124,7 @@
                     android:textSize="13sp"
                     android:gravity="center"
                     android:paddingHorizontal="18dp"
-                    android:background="@drawable/bg_tag_community"
+                    android:background="@drawable/bg_role_tag"
                     android:textColor="#8B5CF6"/>
             </LinearLayout>
 
