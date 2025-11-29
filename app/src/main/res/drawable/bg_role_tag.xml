@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Admin → đỏ hồng -->
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp"/>
+            <solid android:color="#F87171"/>
+        </shape>
+    </item>
+
+    <!-- Author → xanh dương -->
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp"/>
+            <solid android:color="#60A5FA"/>
+        </shape>
+    </item>
+
+    <!-- User (mặc định) → xám nhạt -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp"/>
+            <solid android:color="#CBD5E1"/>
+        </shape>
+    </item>
+
+</selector>
