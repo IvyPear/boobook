@@ -10,9 +10,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BooBook">
+        android:theme="@style/Theme.BooBook"
+        android:usesCleartextTraffic="false"
+        tools:targetApi="31">
 
-        <!-- 1. MÀN HÌNH ĐẦU TIÊN KHI MỞ APP: LOGIN -->
+        <!-- MÀN HÌNH ĐẦU TIÊN KHI MỞ APP -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -22,13 +24,21 @@
             </intent-filter>
         </activity>
 
-        <!-- 2. MainActivity không còn LAUNCHER nữa -->
+        <!-- MainActivity (sau khi login) -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
 
-        <!-- Đừng quên khai báo RegisterActivity nếu dùng -->
-        <activity android:name=".RegisterActivity" android:exported="false" />
+        <!-- RegisterActivity -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+
+        <!-- RoleSelectionActivity – QUAN TRỌNG NHẤT – ĐÃ THÊM VÀO ĐÂY -->
+        <activity
+            android:name=".RoleSelectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BooBook" />
 
     </application>
 
