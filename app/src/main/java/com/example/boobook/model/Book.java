@@ -3,17 +3,15 @@ package com.example.boobook.model;
 import java.io.Serializable;
 
 public class Book implements Serializable {
-    public String id, title, author, coverUrl, genre;
+    public String id;          // ← Document ID từ Firestore
+    public String title;
+    public String author;
+    public String coverUrl;
+    public String genre;
     public long views;
+    public long likes = 0;     // ← Số lượt thích, mặc định 0
 
-    public Book() {} // Firestore cần constructor rỗng
-
-    public Book(String id, String title, String author, String coverUrl, String genre, long views) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.coverUrl = coverUrl;
-        this.genre = genre;
-        this.views = views;
+    public Book() {
+        // Firestore cần constructor rỗng
     }
 }

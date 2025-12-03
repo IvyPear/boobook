@@ -11,6 +11,9 @@ import com.example.boobook.databinding.FragmentHomeBinding;
 import com.example.boobook.model.Book;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -30,8 +33,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerViews() {
-        trendingAdapter = new BookTrendingAdapter(requireActivity());     // ← TRUYỀN requireActivity()
-        newArrivalsAdapter = new BookTrendingAdapter(requireActivity());  // ← TRUYỀN requireActivity()
+        trendingAdapter = new BookTrendingAdapter(requireActivity());
+        newArrivalsAdapter = new BookTrendingAdapter(requireActivity());
 
         binding.rvTrending.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvTrending.setAdapter(trendingAdapter);
@@ -46,7 +49,16 @@ public class HomeFragment extends Fragment {
                 .orderBy("views", Query.Direction.DESCENDING)
                 .limit(20)
                 .get()
-                .addOnSuccessListener(snapshot -> trendingAdapter.updateBooks(snapshot.toObjects(Book.class)));
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Book> books = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Book book = document.toObject(Book.class);
+                        book.id = document.getId();  // ← BẮT BUỘC SET ID
+                        book.likes = document.getLong("likes") != null ? document.getLong("likes") : 0;
+                        books.add(book);
+                    }
+                    trendingAdapter.updateBooks(books);
+                });
     }
 
     private void loadNewArrivals() {
@@ -55,9 +67,15 @@ public class HomeFragment extends Fragment {
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(5)
                 .get()
-                .addOnSuccessListener(snapshot -> newArrivalsAdapter.updateBooks(snapshot.toObjects(Book.class)))
-                .addOnFailureListener(e -> {
-                    // Nếu chưa có createdAt thì vẫn load bình thường
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Book> books = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Book book = document.toObject(Book.class);
+                        book.id = document.getId();  // ← BẮT BUỘC SET ID
+                        book.likes = document.getLong("likes") != null ? document.getLong("likes") : 0;
+                        books.add(book);
+                    }
+                    newArrivalsAdapter.updateBooks(books);
                 });
     }
 }
