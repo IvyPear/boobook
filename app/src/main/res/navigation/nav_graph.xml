@@ -24,4 +24,19 @@
         android:name="com.example.boobook.ui.profile.ProfileFragment"
         android:label="Profile" />
 
+    <!-- THÊM FRAGMENT CHI TIẾT SÁCH -->
+    <fragment
+        android:id="@+id/bookDetailFragment"
+        android:name="com.example.boobook.ui.BookDetailFragment"
+        android:label="Book Detail">
+        <argument
+            android:name="book"
+            app:argType="com.example.boobook.model.Book" />
+    </fragment>
+
+    <!-- GLOBAL ACTION ĐỂ TỪ BẤT CỨ ĐÂU CŨNG NHẢY VÀO DETAIL -->
+    <action
+        android:id="@+id/action_global_bookDetail"
+        app:destination="@id/bookDetailFragment" />
+
 </navigation>

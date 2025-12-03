@@ -1,6 +1,8 @@
 package com.example.boobook.model;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book implements Serializable {
     public String id, title, author, coverUrl, genre;
     public long views;
 

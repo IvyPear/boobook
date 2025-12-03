@@ -10,15 +10,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.boobook.R;
 import com.example.boobook.model.Book;
+import com.example.boobook.ui.BookDetailFragment;
+import androidx.fragment.app.FragmentActivity;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookTrendingAdapter extends RecyclerView.Adapter<BookTrendingAdapter.ViewHolder> {
 
     private List<Book> bookList = new ArrayList<>();
+    private final FragmentActivity activity;
+
+    public BookTrendingAdapter(FragmentActivity activity) {
+        this.activity = activity;
+    }
 
     public void updateBooks(List<Book> books) {
-        this.bookList = books;
+        bookList.clear();
+        bookList.addAll(books);
         notifyDataSetChanged();
     }
 
@@ -42,6 +50,15 @@ public class BookTrendingAdapter extends RecyclerView.Adapter<BookTrendingAdapte
                 .placeholder(R.drawable.book_placeholder)
                 .error(R.drawable.book_placeholder)
                 .into(holder.ivBookCover);
+
+        // CLICK MỞ DETAIL – DÙNG ĐÚNG ID navHost CỦA BẠN
+        holder.itemView.setOnClickListener(v -> {
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.navHost, BookDetailFragment.newInstance(book))  // ← ĐÚNG ID: navHost
+                    .addToBackStack("detail")
+                    .commit();
+        });
     }
 
     @Override

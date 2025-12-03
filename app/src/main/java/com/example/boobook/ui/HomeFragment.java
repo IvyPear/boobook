@@ -24,14 +24,14 @@ public class HomeFragment extends Fragment {
 
         setupRecyclerViews();
         loadTrendingBooks();
-        loadNewArrivals();   // ← ĐÃ CHỈNH ĐỂ LẤY ĐÚNG 5 CUỐN MỚI NHẤT
+        loadNewArrivals();
 
         return binding.getRoot();
     }
 
     private void setupRecyclerViews() {
-        trendingAdapter = new BookTrendingAdapter();
-        newArrivalsAdapter = new BookTrendingAdapter();
+        trendingAdapter = new BookTrendingAdapter(requireActivity());     // ← TRUYỀN requireActivity()
+        newArrivalsAdapter = new BookTrendingAdapter(requireActivity());  // ← TRUYỀN requireActivity()
 
         binding.rvTrending.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvTrending.setAdapter(trendingAdapter);
@@ -49,18 +49,15 @@ public class HomeFragment extends Fragment {
                 .addOnSuccessListener(snapshot -> trendingAdapter.updateBooks(snapshot.toObjects(Book.class)));
     }
 
-    // ĐÃ CHỈNH CHUẨN: LẤY 5 CUỐN MỚI NHẤT THEO createdAt
     private void loadNewArrivals() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("books")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(5)                                      // ← CHỈ 5 CUỐN
+                .limit(5)
                 .get()
-                .addOnSuccessListener(snapshot -> {
-                    newArrivalsAdapter.updateBooks(snapshot.toObjects(Book.class));
-                })
+                .addOnSuccessListener(snapshot -> newArrivalsAdapter.updateBooks(snapshot.toObjects(Book.class)))
                 .addOnFailureListener(e -> {
-                    // Nếu chưa có field createdAt → vẫn hiện theo thứ tự document (vẫn ổn)
+                    // Nếu chưa có createdAt thì vẫn load bình thường
                 });
     }
 }
