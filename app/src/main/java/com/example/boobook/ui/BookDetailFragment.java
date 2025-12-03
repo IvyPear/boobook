@@ -43,7 +43,11 @@ public class BookDetailFragment extends Fragment {
         binding.toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
 
         binding.btnReadNow.setOnClickListener(v -> {
-            // Sắp tới mở phần đọc truyện
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.navHost, ChaptersFragment.newInstance(book))
+                    .addToBackStack("chapters")
+                    .commit();
         });
 
         return binding.getRoot();
