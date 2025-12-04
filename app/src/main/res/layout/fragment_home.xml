@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="#8EC0F0">
 
-    <!-- THÊM NestedScrollView ĐỂ LƯỚT ĐƯỢC -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:text="BooBook"
                 android:textSize="36sp"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:fontFamily="sans-serif-medium"
                 android:layout_marginTop="20dp"/>
 
@@ -124,7 +124,7 @@
                 android:paddingEnd="8dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:nestedScrollingEnabled="false"/>   <!-- QUAN TRỌNG -->
+                android:nestedScrollingEnabled="false"/>
 
             <!-- New Arrivals -->
             <LinearLayout
@@ -160,20 +160,52 @@
                 android:paddingEnd="8dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:nestedScrollingEnabled="false"/>   <!-- QUAN TRỌNG -->
+                android:nestedScrollingEnabled="false"/>
 
-            <!-- Khoảng trống cuối để dễ kéo -->
+            <!-- STORIES MỚI NHẤT – ĐÃ THÊM -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="40dp"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Stories mới nhất"
+                    android:textSize="22sp"
+                    android:textColor="#1E293B"
+                    android:fontFamily="sans-serif-medium"/>
+                <TextView
+                    android:id="@+id/tvSeeAllStories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See All >"
+                    android:textColor="@color/pastel_blue_dark"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLatestStories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_story"/>
+
             <View android:layout_width="match_parent" android:layout_height="80dp"/>
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ProgressBar để ngoài để hiện full màn hình -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

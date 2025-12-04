@@ -6,9 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.example.boobook.R;
 import com.example.boobook.adapter.BookTrendingAdapter;
+import com.example.boobook.adapter.StoryAdapter;
 import com.example.boobook.databinding.FragmentHomeBinding;
 import com.example.boobook.model.Book;
+import com.example.boobook.model.Story;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -20,6 +24,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private BookTrendingAdapter trendingAdapter;
     private BookTrendingAdapter newArrivalsAdapter;
+    private StoryAdapter storyAdapter; // ← THÊM MỚI
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,6 +33,7 @@ public class HomeFragment extends Fragment {
         setupRecyclerViews();
         loadTrendingBooks();
         loadNewArrivals();
+        loadLatestStories(); // ← THÊM MỚI
 
         return binding.getRoot();
     }
@@ -41,6 +47,26 @@ public class HomeFragment extends Fragment {
 
         binding.rvNewArrivals.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvNewArrivals.setAdapter(newArrivalsAdapter);
+
+        // Setup Stories
+        storyAdapter = new StoryAdapter(story -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.navHost, StoryDetailFragment.newInstance(story))
+                    .addToBackStack(null)
+                    .commit();
+        });
+        binding.rvLatestStories.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvLatestStories.setAdapter(storyAdapter);
+
+        // Nút See All Stories
+        binding.tvSeeAllStories.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.navHost, new StoriesFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     private void loadTrendingBooks() {
@@ -53,7 +79,7 @@ public class HomeFragment extends Fragment {
                     List<Book> books = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Book book = document.toObject(Book.class);
-                        book.id = document.getId();  // ← BẮT BUỘC SET ID
+                        book.id = document.getId();
                         book.likes = document.getLong("likes") != null ? document.getLong("likes") : 0;
                         books.add(book);
                     }
@@ -71,11 +97,29 @@ public class HomeFragment extends Fragment {
                     List<Book> books = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Book book = document.toObject(Book.class);
-                        book.id = document.getId();  // ← BẮT BUỘC SET ID
+                        book.id = document.getId();
                         book.likes = document.getLong("likes") != null ? document.getLong("likes") : 0;
                         books.add(book);
                     }
                     newArrivalsAdapter.updateBooks(books);
+                });
+    }
+
+    // THÊM MỚI – LOAD STORIES
+    private void loadLatestStories() {
+        FirebaseFirestore.getInstance()
+                .collection("stories")
+                .orderBy("date", Query.Direction.DESCENDING)
+                .limit(5)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Story> list = new ArrayList<>();
+                    for (var doc : snapshot) {
+                        Story s = doc.toObject(Story.class);
+                        s.id = doc.getId();
+                        list.add(s);
+                    }
+                    storyAdapter.updateStories(list);
                 });
     }
 }

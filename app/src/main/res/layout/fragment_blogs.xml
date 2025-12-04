@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="#F8FBFF">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:background="#E3F2FD">
 
-        <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -22,7 +21,6 @@
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="#1E293B"/>
 
-        <!-- Search bar -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +44,6 @@
                 android:textColorHint="#94A3B8"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Tab filter -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabCategory"
             android:layout_width="match_parent"
@@ -57,12 +54,9 @@
             app:tabIndicatorColor="#3B82F6"
             app:tabIndicatorHeight="3dp"
             app:tabSelectedTextColor="#3B82F6"
-            app:tabTextColor="#94A3B8"
-            app:tabBackground="@android:color/transparent"
-            app:tabRippleColor="@android:color/transparent"/>
+            app:tabTextColor="#94A3B8"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Danh sách blog -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBlogs"
         android:layout_width="match_parent"
@@ -73,6 +67,5 @@
         android:paddingBottom="100dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_blog"/>
-
+        tools:listitem="@layout/item_story"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
