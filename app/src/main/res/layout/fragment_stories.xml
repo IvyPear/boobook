@@ -38,23 +38,25 @@
             app:boxBackgroundColor="#FFFFFF"
             app:boxStrokeColor="#E0E0E0">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search stories..."
                 android:textColorHint="#94A3B8"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Tab filter (sau này thêm) -->
+        <!-- TAB LỌC THỂ LOẠI – SIÊU ĐẸP -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="12dp"
-            app:tabMode="fixed"
+            android:layout_marginBottom="16dp"
+            app:tabMode="scrollable"
             app:tabIndicatorColor="#3B82F6"
             app:tabSelectedTextColor="#3B82F6"
-            app:tabTextColor="#94A3B8"/>
+            app:tabTextColor="#94A3B8"
+            app:tabGravity="start"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -65,7 +67,6 @@
         android:paddingHorizontal="20dp"
         android:paddingTop="12dp"
         android:paddingBottom="100dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_story"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

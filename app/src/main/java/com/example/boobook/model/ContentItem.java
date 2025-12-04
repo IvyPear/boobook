@@ -1,3 +1,4 @@
+// File: model/ContentItem.java
 package com.example.boobook.model;
 
 import com.google.firebase.Timestamp;
@@ -15,9 +16,13 @@ public class ContentItem implements Serializable {
     public Long views = 0L;
     public Long likes = 0L;
     public String type;           // "book" hoặc "story"
-    public Object date;           // String hoặc Timestamp
+    public Object date;           // Timestamp hoặc String
     public String readTime;
     public Long chapterCount = 1L;
+    public String[] genreList;
+
+    // THÊM DÒNG NÀY – QUAN TRỌNG NHẤT!!!
+    public String category = "all";  // Mặc định là "all", các thể loại: tinhcam, kinhdi, haihuoc, 18+, ...
 
     public ContentItem() {}
 
@@ -30,7 +35,6 @@ public class ContentItem implements Serializable {
         return date.toString();
     }
 
-    // Tính điểm hot (views + likes x 2)
     public long getHotScore() {
         return views + (likes * 2);
     }
