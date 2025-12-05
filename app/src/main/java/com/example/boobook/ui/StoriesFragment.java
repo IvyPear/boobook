@@ -119,9 +119,17 @@ public class StoriesFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new AllContentAdapter(item -> {
+            if (!isAdded() || getActivity() == null) return;
+
             if ("book".equals(item.type)) {
-                android.widget.Toast.makeText(requireContext(), "Sắp mở sách: " + item.title, android.widget.Toast.LENGTH_SHORT).show();
+                // MỞ TRANG CHI TIẾT SÁCH – TRUYỀN CHỈ ID (String) → GIỐNG HỆT BÊN HOME!!!
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.navHost, BookDetailFragment.newInstance(item.id))
+                        .addToBackStack(null)
+                        .commitAllowingStateLoss();
             } else {
+                // Truyện ngắn → mở bình thường
                 Story story = new Story();
                 story.id = item.id;
                 story.title = item.title;
@@ -130,13 +138,15 @@ public class StoriesFragment extends Fragment {
                 story.content = item.desc;
                 story.readTime = item.readTime;
                 story.date = item.date;
+
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.navHost, StoryDetailFragment.newInstance(story))
                         .addToBackStack(null)
-                        .commit();
+                        .commitAllowingStateLoss();
             }
         });
+
         binding.rvStories.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvStories.setAdapter(adapter);
     }
