@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,9 @@ import com.bumptech.glide.Glide;
 import com.example.boobook.R;
 import com.example.boobook.databinding.FragmentBookDetailBinding;
 import com.example.boobook.model.Book;
+import com.example.boobook.utils.FavoriteHelper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -21,8 +25,8 @@ public class BookDetailFragment extends Fragment {
     private FragmentBookDetailBinding binding;
     private Book book;
     private String bookId;
-    private boolean isLiked = false;
-    private DocumentReference bookRef;
+    private boolean isFavorite = false;  // ĐỔI TÊN TỪ isLiked -> isFavorite
+    private FirebaseUser currentUser;
 
     // HỖ TRỢ CẢ 2 CÁCH: NHẬN BOOK HOẶC BOOKID
     public static BookDetailFragment newInstance(Book book) {
@@ -45,6 +49,8 @@ public class BookDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentBookDetailBinding.inflate(inflater, container, false);
 
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         // LẤY DỮ LIỆU TỪ ARGUMENTS
         if (getArguments() != null) {
             if (getArguments().containsKey("book")) {
@@ -52,11 +58,11 @@ public class BookDetailFragment extends Fragment {
                 if (book != null) {
                     bookId = book.id;
                     bindData();
-                    setupLoveButton();
+                    setupFavoriteButton();  // ĐỔI TÊN TỪ setupLoveButton
                 }
             } else if (getArguments().containsKey("bookId")) {
                 bookId = getArguments().getString("bookId");
-                loadBookFromFirestore(); // LOAD DỮ LIỆU TỪ FIRESTORE NẾU CHỈ CÓ ID
+                loadBookFromFirestore();
             }
         }
 
@@ -86,9 +92,9 @@ public class BookDetailFragment extends Fragment {
                     if (snapshot.exists()) {
                         book = snapshot.toObject(Book.class);
                         if (book != null) {
-                            book.id = snapshot.getId(); // ĐẢM BẢO CÓ ID
+                            book.id = snapshot.getId();
                             bindData();
-                            setupLoveButton();
+                            setupFavoriteButton();
                         }
                     }
                 });
@@ -112,35 +118,95 @@ public class BookDetailFragment extends Fragment {
                 .into(binding.ivBlogCover);
     }
 
-    private void setupLoveButton() {
+    private void setupFavoriteButton() {
         if (book == null || book.id == null || book.id.isEmpty()) {
             binding.btnLove.setEnabled(false);
             return;
         }
 
-        bookRef = FirebaseFirestore.getInstance().collection("books").document(book.id);
+        // KIỂM TRA ĐĂNG NHẬP
+        if (currentUser == null) {
+            binding.btnLove.setEnabled(false);
+            return;
+        }
 
-        // Hiển thị trạng thái hiện tại
-        binding.btnLove.setIconResource(book.likes > 0 ? R.drawable.ic_heart_filled : R.drawable.ic_heart);
-        binding.btnLove.setIconTintResource(book.likes > 0 ? android.R.color.holo_red_light : android.R.color.white);
-        isLiked = book.likes > 0;
+        // KIỂM TRA TRẠNG THÁI FAVORITE HIỆN TẠI
+        checkFavoriteStatus();
 
         binding.btnLove.setOnClickListener(v -> {
-            isLiked = !isLiked;
-
-            if (isLiked) {
-                binding.btnLove.setIconResource(R.drawable.ic_heart_filled);
-                binding.btnLove.setIconTintResource(android.R.color.holo_red_light);
-                bookRef.update("likes", FieldValue.increment(1));
-                book.likes++;
-            } else {
-                binding.btnLove.setIconResource(R.drawable.ic_heart);
-                binding.btnLove.setIconTintResource(android.R.color.white);
-                bookRef.update("likes", FieldValue.increment(-1));
-                book.likes--;
-            }
-            updateLikesCount(book.likes);
+            toggleFavorite();
         });
+    }
+
+    private void checkFavoriteStatus() {
+        if (currentUser == null || book == null || book.id == null) {
+            updateFavoriteIcon(false);
+            return;
+        }
+
+        DocumentReference favRef = FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(currentUser.getUid())
+                .collection("favorites")
+                .document(book.id);
+
+        favRef.get().addOnSuccessListener(snapshot -> {
+            if (isAdded()) {
+                isFavorite = snapshot.exists();
+                updateFavoriteIcon(isFavorite);
+            }
+        }).addOnFailureListener(e -> {
+            if (isAdded()) updateFavoriteIcon(false);
+        });
+    }
+
+    private void toggleFavorite() {
+        if (currentUser == null) {
+            showToast("Vui lòng đăng nhập để sử dụng tính năng này");
+            return;
+        }
+
+        if (book == null || book.id == null || !isAdded()) return;
+
+        // DÙNG FavoriteHelper ĐỂ THÊM/XÓA FAVORITE
+        FavoriteHelper.toggle(
+                book.id,
+                "book",
+                book.title,
+                book.coverUrl,
+                isNowFavorite -> {
+                    if (isAdded()) {
+                        isFavorite = isNowFavorite;
+                        updateFavoriteIcon(isFavorite);
+                        showToast(isNowFavorite ? "Đã thêm vào yêu thích" : "Đã xóa khỏi yêu thích");
+
+                        // ĐỒNG THỜI CẬP NHẬT LIKES COUNT (tùy chọn)
+                        if (isNowFavorite) {
+                            updateBookLikes(1);
+                        } else {
+                            updateBookLikes(-1);
+                        }
+                    }
+                }
+        );
+    }
+
+    private void updateBookLikes(int increment) {
+        DocumentReference bookRef = FirebaseFirestore.getInstance()
+                .collection("books")
+                .document(book.id);
+
+        bookRef.update("likes", FieldValue.increment(increment))
+                .addOnSuccessListener(aVoid -> {
+                    book.likes += increment;
+                    updateLikesCount(book.likes);
+                });
+    }
+
+    private void updateFavoriteIcon(boolean isFavorite) {
+        binding.btnLove.setIconResource(isFavorite ? R.drawable.ic_heart_filled : R.drawable.ic_heart);
+        binding.btnLove.setIconTintResource(isFavorite ?
+                android.R.color.holo_red_light : android.R.color.white);
     }
 
     private void updateLikesCount(long likes) {
@@ -148,6 +214,12 @@ public class BookDetailFragment extends Fragment {
             binding.tvLikes.setText(String.format("%.1fK likes", likes / 1000.0));
         } else {
             binding.tvLikes.setText(likes + " likes");
+        }
+    }
+
+    private void showToast(String message) {
+        if (isAdded() && getContext() != null) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
 }

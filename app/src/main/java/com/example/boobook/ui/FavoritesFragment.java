@@ -1,6 +1,7 @@
 package com.example.boobook.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,9 @@ import com.example.boobook.databinding.FragmentFavoritesBinding;
 import com.example.boobook.model.ContentItem;
 import com.example.boobook.model.Story;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,8 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
 
+        Log.d("FAVORITES", "FavoritesFragment created");
+
         setupRecyclerView();
         loadFavorites();
 
@@ -39,9 +43,13 @@ public class FavoritesFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new AllContentAdapter(item -> {
+            Log.d("FAVORITES", "Item clicked: " + item.title);
             if ("book".equals(item.type)) {
-                // TODO: Mở Book Detail
-                showToast("Sắp mở sách: " + item.title);
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.navHost, BookDetailFragment.newInstance(item.id))
+                        .addToBackStack(null)
+                        .commitAllowingStateLoss();
             } else {
                 Story story = new Story();
                 story.id = item.id;
@@ -56,71 +64,71 @@ public class FavoritesFragment extends Fragment {
                         .beginTransaction()
                         .replace(R.id.navHost, StoryDetailFragment.newInstance(story))
                         .addToBackStack(null)
-                        .commit();
+                        .commitAllowingStateLoss();
             }
         });
 
-        binding.rvFavorites.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
+        binding.rvFavorites.setLayoutManager(layoutManager);
         binding.rvFavorites.setAdapter(adapter);
     }
 
     private void loadFavorites() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        db.collection("users").document(userId).collection("favorites")
-                .addSnapshotListener((snap, e) -> {
-                    if (e != null || snap == null) {
-                        binding.tvEmpty.setVisibility(View.VISIBLE);
+        if (currentUser == null) {
+            showEmpty(true);
+            binding.tvEmpty.setText("Vui lòng đăng nhập để xem yêu thích");
+            return;
+        }
+
+        String userId = currentUser.getUid();
+        Log.d("FAVORITES", "Loading favorites for user: " + userId);
+
+        // LOAD TẤT CẢ FAVORITES - SẼ CÓ FIELD "type" để phân biệt
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(userId)
+                .collection("favorites")
+                .addSnapshotListener((snapshot, error) -> {
+                    if (error != null || snapshot == null) {
+                        showEmpty(true);
                         return;
                     }
 
                     favoriteList.clear();
-                    List<String> favoriteIds = new ArrayList<>();
-                    for (var doc : snap) {
-                        favoriteIds.add(doc.getId());
+
+                    // XỬ LÝ MỖI FAVORITE DOCUMENT
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        ContentItem item = new ContentItem();
+                        item.id = doc.getId();
+                        item.type = doc.getString("type");  // "book" hoặc "story"
+                        item.title = doc.getString("title");
+                        item.author = "";  // Có thể lưu thêm author trong favorites
+                        item.coverUrl = doc.getString("coverUrl");
+                        item.desc = "Đã thêm vào yêu thích";  // Mô tả mặc định
+
+                        favoriteList.add(item);
+                        Log.d("FAVORITES", "Added favorite: " + item.title + " (" + item.type + ")");
                     }
 
-                    if (favoriteIds.isEmpty()) {
-                        showEmptyState(true);
-                        return;
+                    if (favoriteList.isEmpty()) {
+                        showEmpty(true);
+                    } else {
+                        adapter.updateList(favoriteList);
+                        showEmpty(false);
+                        Log.d("FAVORITES", "Total favorites: " + favoriteList.size());
                     }
-
-                    // Lấy dữ liệu từ stories
-                    db.collection("stories").whereIn("id", favoriteIds).get()
-                            .addOnSuccessListener(stories -> addToList(stories, "story"));
-
-                    // Lấy dữ liệu từ books
-                    db.collection("books").whereIn("id", favoriteIds).get()
-                            .addOnSuccessListener(books -> addToList(books, "book"));
                 });
     }
 
-    private void addToList(QuerySnapshot snap, String type) {
-        for (var doc : snap) {
-            ContentItem item = new ContentItem();
-            item.id = doc.getId();
-            item.type = type;
-            item.title = doc.getString("title");
-            item.author = doc.getString("author");
-            item.coverUrl = doc.getString("coverUrl");
-            item.desc = type.equals("story") ? doc.getString("content") : doc.getString("desc");
-            item.readTime = doc.getString("readTime");
-            item.date = doc.get("date");
-            item.chapterCount = doc.getLong("chapterCount");
-            favoriteList.add(item);
+    private void showEmpty(boolean empty) {
+        if (empty) {
+            binding.tvEmpty.setVisibility(View.VISIBLE);
+            binding.rvFavorites.setVisibility(View.GONE);
+        } else {
+            binding.tvEmpty.setVisibility(View.GONE);
+            binding.rvFavorites.setVisibility(View.VISIBLE);
         }
-
-        adapter.updateList(favoriteList);
-        showEmptyState(favoriteList.isEmpty());
-    }
-
-    private void showEmptyState(boolean empty) {
-        binding.tvEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
-        binding.rvFavorites.setVisibility(empty ? View.GONE : View.VISIBLE);
-    }
-
-    private void showToast(String msg) {
-        android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show();
     }
 }

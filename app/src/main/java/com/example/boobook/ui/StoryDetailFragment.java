@@ -12,12 +12,11 @@ import com.bumptech.glide.Glide;
 import com.example.boobook.R;
 import com.example.boobook.databinding.FragmentStoryDetailBinding;
 import com.example.boobook.model.Story;
+import com.example.boobook.utils.FavoriteHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.HashMap;
-import java.util.Map;
 
 public class StoryDetailFragment extends Fragment {
 
@@ -86,8 +85,7 @@ public class StoryDetailFragment extends Fragment {
 
     private void checkFavoriteStatus() {
         if (currentUser == null || story == null || story.id == null) {
-            binding.btnFavorite.setIconResource(R.drawable.ic_heart);
-            isFavorite = false;
+            updateFavoriteIcon(false);
             return;
         }
 
@@ -98,15 +96,15 @@ public class StoryDetailFragment extends Fragment {
                 .document(story.id);
 
         favRef.get().addOnSuccessListener(snapshot -> {
-            if (!isAdded()) return; // Chống crash nếu Fragment đã chết
-            isFavorite = snapshot.exists();
-            binding.btnFavorite.setIconResource(isFavorite ? R.drawable.ic_heart_filled : R.drawable.ic_heart);
+            if (isAdded()) {
+                isFavorite = snapshot.exists();
+                updateFavoriteIcon(isFavorite);
+            }
         }).addOnFailureListener(e -> {
-            if (isAdded()) binding.btnFavorite.setIconResource(R.drawable.ic_heart);
+            if (isAdded()) updateFavoriteIcon(false);
         });
     }
 
-    // HÀM QUAN TRỌNG NHẤT – ĐÃ HOÀN HẢO TUYỆT ĐỐI
     private void toggleFavorite() {
         if (currentUser == null) {
             showToast("Vui lòng đăng nhập để sử dụng tính năng này");
@@ -115,49 +113,24 @@ public class StoryDetailFragment extends Fragment {
 
         if (story == null || story.id == null || !isAdded()) return;
 
-        // ĐẢO NGƯỢC TRẠNG THÁI NGAY LẬP TỨC – UI PHẢN HỒI TỨC THÌ
-        isFavorite = !isFavorite;
+        // DÙNG FavoriteHelper THAY VÌ TỰ XỬ LÝ
+        FavoriteHelper.toggle(
+                story.id,
+                "story",
+                story.title,
+                story.coverUrl,
+                isNowFavorite -> {
+                    if (isAdded()) {
+                        isFavorite = isNowFavorite;
+                        updateFavoriteIcon(isFavorite);
+                        showToast(isNowFavorite ? "Đã thêm vào yêu thích" : "Đã xóa khỏi yêu thích");
+                    }
+                }
+        );
+    }
+
+    private void updateFavoriteIcon(boolean isFavorite) {
         binding.btnFavorite.setIconResource(isFavorite ? R.drawable.ic_heart_filled : R.drawable.ic_heart);
-
-        DocumentReference favRef = FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(currentUser.getUid())
-                .collection("favorites")
-                .document(story.id);
-
-        if (isFavorite) {
-            // ĐANG THÊM VÀO YÊU THÍCH
-            Map<String, Object> data = new HashMap<>();
-            data.put("addedAt", System.currentTimeMillis());
-            data.put("type", "story");
-            data.put("title", story.title);
-            data.put("coverUrl", story.coverUrl);
-
-            favRef.set(data)
-                    .addOnSuccessListener(aVoid -> {
-                        if (isAdded()) showToast("Đã thêm vào yêu thích");
-                    })
-                    .addOnFailureListener(e -> {
-                        if (isAdded()) {
-                            isFavorite = false;
-                            binding.btnFavorite.setIconResource(R.drawable.ic_heart);
-                            showToast("Lỗi mạng, không thể thêm");
-                        }
-                    });
-        } else {
-            // ĐANG XÓA KHỎI YÊU THÍCH
-            favRef.delete()
-                    .addOnSuccessListener(aVoid -> {
-                        if (isAdded()) showToast("Đã xóa khỏi yêu thích");
-                    })
-                    .addOnFailureListener(e -> {
-                        if (isAdded()) {
-                            isFavorite = true;
-                            binding.btnFavorite.setIconResource(R.drawable.ic_heart_filled);
-                            showToast("Lỗi mạng, không thể xóa");
-                        }
-                    });
-        }
     }
 
     private void showToast(String msg) {
