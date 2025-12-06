@@ -19,20 +19,27 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-    // PHIÊN BẢN ĐÚNG: CHỈ NHẬN 3 THAM SỐ
+    // ĐĂNG NHẬP – LƯU ĐỦ THÔNG TIN
     public void login(String uid, String name, String email) {
         editor.putString(KEY_UID, uid);
-        editor.putString(KEY_NAME, name);
-        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_NAME, name != null ? name : "User");
+        editor.putString(KEY_EMAIL, email != null ? email : "");
         editor.apply();
     }
 
-    // THÊM METHOD SAVE ROLE
+    // THÊM ROLE (nếu cần)
     public void saveRole(String role) {
         editor.putString(KEY_ROLE, role);
         editor.apply();
     }
 
+    // HÀM MỚI: CẬP NHẬT TÊN KHI ĐỔI TRONG EDIT PROFILE
+    public void saveName(String name) {
+        editor.putString(KEY_NAME, name != null ? name : "User");
+        editor.apply();
+    }
+
+    // LẤY THÔNG TIN
     public String getUid() {
         return pref.getString(KEY_UID, null);
     }
@@ -46,7 +53,7 @@ public class SessionManager {
     }
 
     public String getRole() {
-        return pref.getString(KEY_ROLE, "user"); // mặc định là user
+        return pref.getString(KEY_ROLE, "user");
     }
 
     public boolean isLoggedIn() {

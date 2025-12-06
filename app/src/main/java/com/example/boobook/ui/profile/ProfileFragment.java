@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import com.example.boobook.LoginActivity;
 import com.example.boobook.R;
 import com.example.boobook.databinding.FragmentProfileBinding;
-import com.example.boobook.utils.FirebaseHelper;
 import com.example.boobook.utils.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import java.util.List;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
 
@@ -25,27 +24,34 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         session = new SessionManager(requireContext());
 
-        // HIỆN THÔNG TIN THẬT
+        // Hiển thị tên + email
         binding.tvUserName.setText(session.getName());
         binding.tvUserEmail.setText(session.getEmail());
 
-        // ĐẾM FAVORITES THẬT
+        // Đếm Favorites realtime
         loadFavoritesCount();
 
-        // LOGOUT + FAVORITES CLICK
-        binding.getRoot().post(() -> {
-            setItemClick("Logout", v -> {
-                FirebaseHelper.getInstance().auth().signOut();
-                session.logout();
-                startActivity(new Intent(requireActivity(), LoginActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                requireActivity().finish();
-            });
+        // Bấm các mục – ĐÃ KẾT NỐI ĐÚNG MÀN HÌNH MỚI
+        binding.itemEditProfile.setOnClickListener(v ->
+                openFragment(new EditProfileFragment()));
 
-            setItemClick("Favorites", v -> {
-                BottomNavigationView nav = requireActivity().findViewById(R.id.bottomNav);
-                if (nav != null) nav.setSelectedItemId(R.id.nav_favorites);
-            });
+        binding.itemChangePassword.setOnClickListener(v ->
+                openFragment(new ChangePasswordFragment()));
+
+        binding.itemReadingHistory.setOnClickListener(v ->
+                openFragment(new ReadingHistoryFragment()));
+
+        binding.itemFavorites.setOnClickListener(v -> {
+            BottomNavigationView nav = requireActivity().findViewById(R.id.bottomNav);
+            if (nav != null) nav.setSelectedItemId(R.id.nav_favorites);
+        });
+
+        binding.itemLogout.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            session.logout();
+            startActivity(new Intent(requireActivity(), LoginActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            requireActivity().finish();
         });
 
         return binding.getRoot();
@@ -53,51 +59,24 @@ public class ProfileFragment extends Fragment {
 
     private void loadFavoritesCount() {
         String uid = session.getUid();
-        if (uid == null || uid.isEmpty()) return;
+        if (uid == null) return;
 
-        FirebaseHelper.getInstance().db()
-                .collection("users").document(uid)
-                .get()
-                .addOnSuccessListener(doc -> {
-                    List<?> favs = (List<?>) doc.get("favorites");
-                    int count = favs != null ? favs.size() : 0;
-                    replaceNumber("0", String.valueOf(count));
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(uid)
+                .collection("favorites")
+                .addSnapshotListener((snapshot, error) -> {
+                    int count = snapshot != null ? snapshot.size() : 0;
+                    binding.tvFavoritesCount.setText(String.valueOf(count));
                 });
     }
 
-    private void setItemClick(String text, View.OnClickListener listener) {
-        findTextView(binding.getRoot(), text, listener);
-    }
-
-    private void findTextView(View view, String target, View.OnClickListener listener) {
-        if (view instanceof ViewGroup) {
-            ViewGroup vg = (ViewGroup) view;
-            for (int i = 0; i < vg.getChildCount(); i++) {
-                View child = vg.getChildAt(i);
-                if (child instanceof TextView && target.equals(((TextView) child).getText().toString().trim())) {
-                    View parent = (View) child.getParent();
-                    parent.setOnClickListener(listener);
-                    return;
-                }
-                findTextView(child, target, listener);
-            }
-        }
-    }
-
-    private void replaceNumber(String oldNum, String newNum) {
-        replaceInView(binding.getRoot(), oldNum, newNum);
-    }
-
-    private void replaceInView(View view, String oldT, String newT) {
-        if (view instanceof ViewGroup) {
-            ViewGroup vg = (ViewGroup) view;
-            for (int i = 0; i < vg.getChildCount(); i++) {
-                View v = vg.getChildAt(i);
-                if (v instanceof TextView && oldT.equals(((TextView) v).getText().toString())) {
-                    ((TextView) v).setText(newT);
-                }
-                replaceInView(v, oldT, newT);
-            }
-        }
+    // Mở fragment mới mượt mà
+    private void openFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.navHost, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
