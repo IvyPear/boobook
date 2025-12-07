@@ -16,6 +16,7 @@ import com.example.boobook.ui.BookDetailFragment;
 import com.example.boobook.ui.StoryDetailFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class ReadingHistoryFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new AllContentAdapter(item -> {
-            // Mở chi tiết sách/truyện như Favorites
+            // Mở chi tiết sách/truyện
             if ("book".equals(item.type)) {
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
@@ -70,80 +71,59 @@ public class ReadingHistoryFragment extends Fragment {
 
     private void loadReadingHistory() {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if (uid == null) return;
+        if (uid == null) {
+            binding.tvEmpty.setText("Vui lòng đăng nhập để xem lịch sử");
+            binding.tvEmpty.setVisibility(View.VISIBLE);
+            binding.rvHistory.setVisibility(View.GONE);
+            return;
+        }
 
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(uid)
                 .collection("readHistory")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((snapshot, error) -> {
+                    if (error != null) {
+                        binding.tvEmpty.setVisibility(View.VISIBLE);
+                        binding.rvHistory.setVisibility(View.GONE);
+                        return;
+                    }
+
                     if (snapshot == null || snapshot.isEmpty()) {
                         binding.tvEmpty.setVisibility(View.VISIBLE);
                         binding.rvHistory.setVisibility(View.GONE);
                         return;
                     }
 
-                    List<String> bookIds = new ArrayList<>();
-                    for (var doc : snapshot) {
-                        bookIds.add(doc.getId());
-                    }
-
                     historyList.clear();
-                    loadBooksFromHistory(bookIds);
-                    loadStoriesFromHistory(bookIds);
-                });
-    }
 
-    private void loadBooksFromHistory(List<String> ids) {
-        FirebaseFirestore.getInstance().collection("books")
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    for (var doc : snapshot) {
-                        if (ids.contains(doc.getId())) {
-                            ContentItem item = new ContentItem();
-                            item.id = doc.getId();
-                            item.type = "book";
-                            item.title = doc.getString("title");
-                            item.author = doc.getString("author");
-                            item.coverUrl = doc.getString("coverUrl");
-                            item.desc = doc.getString("desc");
-                            item.chapterCount = doc.getLong("chapterCount");
-                            historyList.add(item);
+                    for (var doc : snapshot.getDocuments()) {
+                        ContentItem item = new ContentItem();
+                        item.id = doc.getId();
+
+                        String type = doc.getString("type");
+                        if (type == null) continue;
+
+                        item.type = type;
+                        item.title = doc.getString("title");
+                        item.author = doc.getString("author");
+                        item.coverUrl = doc.getString("coverUrl");
+
+                        // Thêm thời gian đọc vào mô tả
+                        if (doc.getTimestamp("readAt") != null) {
+                            String time = doc.getTimestamp("readAt").toDate().toString();
+                            item.desc = "Đã đọc: " + time.substring(0, Math.min(16, time.length()));
+                        } else {
+                            item.desc = "Đã đọc gần đây";
                         }
-                    }
-                    updateList();
-                });
-    }
 
-    private void loadStoriesFromHistory(List<String> ids) {
-        FirebaseFirestore.getInstance().collection("stories")
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    for (var doc : snapshot) {
-                        if (ids.contains(doc.getId())) {
-                            ContentItem item = new ContentItem();
-                            item.id = doc.getId();
-                            item.type = "story";
-                            item.title = doc.getString("title");
-                            item.author = doc.getString("author");
-                            item.coverUrl = doc.getString("coverUrl");
-                            item.desc = doc.getString("content");
-                            item.readTime = doc.getString("readTime");
-                            historyList.add(item);
-                        }
+                        historyList.add(item);
                     }
-                    updateList();
-                });
-    }
 
-    private int loaded = 0;
-    private void updateList() {
-        loaded++;
-        if (loaded >= 2) {
-            adapter.updateList(historyList);
-            binding.tvEmpty.setVisibility(historyList.isEmpty() ? View.VISIBLE : View.GONE);
-            binding.rvHistory.setVisibility(historyList.isEmpty() ? View.GONE : View.VISIBLE);
-            loaded = 0;
-        }
+                    adapter.updateList(historyList);
+                    binding.tvEmpty.setVisibility(historyList.isEmpty() ? View.VISIBLE : View.GONE);
+                    binding.rvHistory.setVisibility(historyList.isEmpty() ? View.GONE : View.VISIBLE);
+                });
     }
 }

@@ -13,6 +13,7 @@ import com.example.boobook.R;
 import com.example.boobook.databinding.FragmentStoryDetailBinding;
 import com.example.boobook.model.Story;
 import com.example.boobook.utils.FavoriteHelper;
+import com.example.boobook.utils.HistoryHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -43,6 +44,16 @@ public class StoryDetailFragment extends Fragment {
             story = (Story) getArguments().getSerializable("story");
             bindData();
             checkFavoriteStatus();
+
+            // LƯU LỊCH SỬ ĐỌC TRUYỆN KHI MỞ TRANG CHI TIẾT
+            if (story != null && story.id != null) {
+                HistoryHelper.saveStoryHistory(
+                        story.id,
+                        story.title != null ? story.title : "Không có tiêu đề",
+                        story.coverUrl != null ? story.coverUrl : "",
+                        story.author != null ? story.author : "Không rõ tác giả"
+                );
+            }
         }
 
         binding.toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
@@ -113,7 +124,6 @@ public class StoryDetailFragment extends Fragment {
 
         if (story == null || story.id == null || !isAdded()) return;
 
-        // DÙNG FavoriteHelper THAY VÌ TỰ XỬ LÝ
         FavoriteHelper.toggle(
                 story.id,
                 "story",

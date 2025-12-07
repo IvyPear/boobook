@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import com.example.boobook.databinding.FragmentReadChapterBinding;
 import com.example.boobook.model.Book;
 import com.example.boobook.model.Chapter;
+import com.example.boobook.utils.HistoryHelper;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -36,6 +37,16 @@ public class ReadChapterFragment extends Fragment {
             book = (Book) getArguments().getSerializable("book");
             currentChapter = (Chapter) getArguments().getSerializable("chapter");
             loadAllChaptersAndDisplayCurrent();
+
+            // LƯU LỊCH SỬ ĐỌC SÁCH KHI BẮT ĐẦU ĐỌC
+            if (book != null && book.id != null) {
+                HistoryHelper.saveBookHistory(
+                        book.id,
+                        book.title != null ? book.title : "Không có tiêu đề",
+                        book.coverUrl != null ? book.coverUrl : "",
+                        book.author != null ? book.author : "Không rõ tác giả"
+                );
+            }
         }
 
         binding.toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
