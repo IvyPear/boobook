@@ -22,8 +22,9 @@
             app:titleTextColor="#1E293B"
             app:titleTextAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
-        <!-- Search bar -->
+        <!-- Search bar - ĐÃ THÊM ID -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
@@ -46,7 +47,7 @@
                 android:textColorHint="#94A3B8" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 3 ô thống kê – ĐÃ SỬA HOÀN TOÀN, KHÔNG CÒN LỖI -->
+        <!-- 3 ô thống kê - ĐÃ THÊM ID -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,9 +71,10 @@
                     android:orientation="vertical"
                     android:gravity="center">
                     <TextView
+                        android:id="@+id/tvTotalPosts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3"
+                        android:text="0"
                         android:textSize="28sp"
                         android:textColor="#1E293B"
                         android:fontFamily="sans-serif-medium" />
@@ -100,9 +102,10 @@
                     android:orientation="vertical"
                     android:gravity="center">
                     <TextView
+                        android:id="@+id/tvActivePosts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2"
+                        android:text="0"
                         android:textSize="28sp"
                         android:textColor="#1E293B"
                         android:fontFamily="sans-serif-medium" />
@@ -130,9 +133,10 @@
                     android:orientation="vertical"
                     android:gravity="center">
                     <TextView
+                        android:id="@+id/tvTotalViews"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2.5K"
+                        android:text="0"
                         android:textSize="28sp"
                         android:textColor="#1E293B"
                         android:fontFamily="sans-serif-medium" />
