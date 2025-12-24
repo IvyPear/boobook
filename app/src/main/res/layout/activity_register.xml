@@ -21,9 +21,9 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_book_open"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/outline_bookmark_heart_24"
             android:layout_gravity="center"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />

@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:text="My Favorites"
         android:textSize="28sp"
-        android:textColor="#1E293B"
-        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/pastel_blue"
+        android:fontFamily="@font/chewy_regular"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

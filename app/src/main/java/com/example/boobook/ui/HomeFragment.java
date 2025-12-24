@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("books")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(5)                                      // ← CHỈ 5 CUỐN
+                .limit(5)
                 .get()
                 .addOnSuccessListener(snapshot -> {
                     newArrivalsAdapter.updateBooks(snapshot.toObjects(Book.class));

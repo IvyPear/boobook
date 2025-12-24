@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#E3F2FD"
-            app:title="Blogs"
+            app:title="BLOGS"
             app:titleTextColor="#1E293B"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="#1E293B"/>
