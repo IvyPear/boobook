@@ -7,7 +7,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2D3748">
+        android:background="#B0C4DE">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -15,7 +15,7 @@
             android:layout_height="?attr/actionBarSize"
             app:titleTextColor="@android:color/white"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@android:color/white" />
+            app:navigationIconTint="#4682B4" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
