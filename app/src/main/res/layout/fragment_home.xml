@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#8EC0F0">
+    android:background="#F0FFFF">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -17,16 +17,29 @@
             android:orientation="vertical"
             android:padding="24dp">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp">
+
             <!-- Logo -->
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/home" />
+
+            <!-- Text -->
             <TextView
+                android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BooBook"
+                android:text="BOO HOME"
                 android:textSize="36sp"
-                android:textColor="@android:color/white"
-                android:fontFamily="sans-serif-medium"
-                android:layout_marginTop="20dp"/>
-
+                android:textColor="@color/pastel_blue"
+                android:fontFamily="@font/chewy_regular"/>
+        </LinearLayout>
             <!-- Search bar -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/searchLayout"
@@ -35,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 app:startIconDrawable="@drawable/ic_search"
-                app:startIconTint="#94A3B8"
+                app:startIconTint="@color/pastel_blue"
                 app:boxBackgroundColor="@android:color/white"
                 app:boxCornerRadiusTopStart="30dp"
                 app:boxCornerRadiusTopEnd="30dp"
@@ -46,8 +59,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Search for books..."
-                    android:textColorHint="#94A3B8"/>
+                    android:hint="Search "
+                    android:textColorHint="#778899"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Banner -->
@@ -64,30 +77,49 @@
                     android:src="@drawable/banner_books"
                     android:scaleType="centerCrop"/>
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="bottom|start"
-                    android:padding="20dp"
-                    android:background="@drawable/gradient_banner">
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <!-- ẢNH BANNER -->
+                    <ImageView
+                        android:id="@+id/imgBanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/banner_cover"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Discover New Stories"
-                        android:textSize="24sp"
-                        android:textColor="@android:color/white"
-                        android:fontFamily="sans-serif-medium"/>
+                        android:orientation="vertical"
+                        android:gravity="top|start"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:background="@drawable/gradient_banner">
+                        <!-- Title -->
+                        <TextView
+                            android:id="@+id/tvBannerTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DISCOVER"
+                            android:textSize="28sp"
+                            android:textColor="@android:color/white"
+                            android:fontFamily="@font/titanone_regular"
+                            android:letterSpacing="0.04"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Explore the best reads"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginTop="4dp"/>
-                </LinearLayout>
+                        <!-- Subtitle -->
+                        <TextView
+                            android:id="@+id/tvBannerSubtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="New Stories For You"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/white"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </FrameLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- Trending -->
@@ -103,8 +135,8 @@
                     android:layout_height="wrap_content"
                     android:text="Trending Stories"
                     android:textSize="22sp"
-                    android:textColor="#1E293B"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:textColor="@color/pastel_blue"
+                    android:fontFamily="@font/dynapuff_variablefont_wdth_wght"/>
                 <TextView
                     android:id="@+id/tvSeeAllTrending"
                     android:layout_width="wrap_content"
@@ -139,8 +171,8 @@
                     android:layout_height="wrap_content"
                     android:text="New Arrivals"
                     android:textSize="22sp"
-                    android:textColor="#1E293B"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:textColor="@color/pastel_blue"
+                    android:fontFamily="@font/dynapuff_variablefont_wdth_wght"/>
                 <TextView
                     android:id="@+id/tvSeeAllNew"
                     android:layout_width="wrap_content"
@@ -175,8 +207,8 @@
                     android:layout_height="wrap_content"
                     android:text="Stories mới nhất"
                     android:textSize="22sp"
-                    android:textColor="#1E293B"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:textColor="@color/pastel_blue"
+                    android:fontFamily="@font/dynapuff_variablefont_wdth_wght"/>
                 <TextView
                     android:id="@+id/tvSeeAllStories"
                     android:layout_width="wrap_content"
