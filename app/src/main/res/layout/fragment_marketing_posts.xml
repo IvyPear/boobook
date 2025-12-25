@@ -4,22 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#E8F4FF">
+    android:background="#F0F8FF">
 
     <!-- Toolbar + Search -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#B3E0FF">
+        android:background="#B0C4DE">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="#1E293B"
+            app:navigationIconTint="#4682B4"
             app:title="Marketing Posts"
-            app:titleTextColor="#1E293B"
+            app:titleTextColor="#4682B4 "
             app:titleTextAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
         <!-- Search bar - ĐÃ THÊM ID -->

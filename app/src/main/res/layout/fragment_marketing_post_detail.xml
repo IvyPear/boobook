@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FBFF">
+    android:background="#F0F8FF">
 
     <!-- Ảnh lớn + Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:contentScrim="#B3E0FF"
+            app:contentScrim="#F0FFFF"
             app:titleEnabled="false">
 
             <ImageView
